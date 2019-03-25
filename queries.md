@@ -37,21 +37,38 @@ where CustomerID=92;
 
 ## list orders grouped by customer showing the number of orders per customer. _Rattlesnake Canyon Grocery_ should have 7 orders.
 
-select Customers.CustomerName, Orders.\*
+select Customers.CustomerName as [Customer Name], Orders.\*
 from Orders
 inner join Customers
 on Orders.CustomerID=Customers.CustomerID
-order by CustomerName
+order by [Customer Name]
+
+# (or, dependending on one's interpretation of the instructions:)
+
+select Customers.CustomerName as [Customer Name], count(OrderID) as [Number of Orders]
+from Orders
+inner join Customers
+on orders.customerID = customers.customerID
+group by Customers.CustomerID;
 
 ## list customers names and the number of orders per customer. Sort the list by number of orders in descending order. _Ernst Handel_ should be at the top with 10 orders followed by _QUICK-Stop_, _Rattlesnake Canyon Grocery_ and _Wartian Herkku_ with 7 orders each.
 
-select Customers.CustomerName, count(OrderID) as order_count
+select Customers.CustomerName as [Customer Name], count(OrderID) as [Number of Orders]
 from Orders
 inner join Customers
 on orders.customerID = customers.customerID
 group by Customers.CustomerID
-order by order_count desc;
+order by [Number of Orders] desc;
 
 ## list orders grouped by customer's city showing number of orders per city. Returns 58 Records with _Aachen_ showing 2 orders and _Albuquerque_ showing 7 orders.
 
+select Customers.City as [Customer City], count(OrderID) as [Number of Orders]
+from Orders
+inner join Customers
+on orders.customerID = customers.customerID
+group by Customers.City;
+
 ## delete all users that have no orders. Should delete 17 (or 18 if you haven't deleted the record added) records.
+
+delete from Customers
+where not exists (select CustomerID from Orders where CustomerId = Customers.CustomerId);
